@@ -1,0 +1,119 @@
+name: update
+# Daily mirror refresh. update.py asks the probe-rs GitHub API what has been
+# released, mirrors anything newer than what this repository already has, and
+# re-checks the versions it already mirrored against upstream's checksums.
+# 日次でupstreamを確認し、未取り込みのversionをミラーする。取り込み済みのversionは
+# upstreamのchecksumと突き合わせ、中身が差し替わっていないかを毎回確認する。
+#
+# Ingestion is automatic; adoption is not. Publishing a new version here has no
+# effect on anyone until a consumer bumps the version it pins.
+# 取り込みは自動、採用は手動。ここで公開しても、利用側がpinを上げるまで影響はない。
+
+on:
+  schedule:
+    # Daily 04:11 UTC. Offset from the hour: GitHub delays scheduled runs when
+    # everyone asks for :00.
+    # 毎時0分は混むためずらしてある。
+    - cron: '11 4 * * *'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Backfill exactly this version (e.g. 0.32.0). Empty = mirror what is new."
+        type: string
+        required: false
+
+# Write permission is required to create releases and commit the record.
+permissions:
+  contents: write
+
+# Do not run overlapping updates.
+concurrency:
+  group: update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+
+      # Exits non-zero on a genuine failure: a changed URL, an HTTP error, or
+      # upstream having altered a version this mirror already published. It
+      # never overwrites an existing record.
+      # 既に公開したversionの中身がupstreamで変わっていたら失敗して通知する。
+      - name: Mirror
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ -n "${{ inputs.version }}" ]; then
+            ./update.py --version "${{ inputs.version }}"
+          else
+            ./update.py
+          fi
+
+      # One release per upstream version, tagged v<version> to match it exactly.
+      # Append-only: an existing tag is left alone rather than re-uploaded, so a
+      # published archive can never change under a consumer that pinned it.
+      # tagはupstream versionと1:1。既存tagには触らない(append-only)。
+      - name: Publish releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          shopt -s nullglob
+          published=0
+          for dir in dist/v*/; do
+            tag="$(basename "$dir")"
+            if gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+              echo "$tag already published; leaving it untouched"
+              continue
+            fi
+            version="${tag#v}"
+            gh release create "$tag" --repo "$GITHUB_REPOSITORY" \
+              --title "probe-rs $version" \
+              --notes "Mirror of [probe-rs $version](https://github.com/probe-rs/probe-rs/releases/tag/$tag).
+
+          Payloads are byte-identical to that release. Archives whose files sat at the
+          archive root are repacked under a single root directory, which is what
+          arduino-cli requires; the rest are passed through unchanged. Each asset's
+          upstream URL and checksum are recorded in \`tools_probe_rs.json\`, and
+          \`update.py\` rebuilds the repacked archives reproducibly, so anyone can
+          verify these against upstream.
+
+          probe-rs is licensed Apache-2.0 OR MIT by the probe-rs project; both license
+          files travel inside every archive. This mirror is not affiliated with probe-rs." \
+              "$dir"/*
+            published=$((published + 1))
+          done
+          echo "published=$published" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Commit the record if changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          mkdir -p versions
+          git add -A versions
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "mirror: record new version(s) (automated)"
+            git push
+          fi
+
+      # Keep the daily schedule from being auto-disabled after 60 days of
+      # repository inactivity: probe-rs may go months without a release.
+      # 60日無活動でschedule停止されるのを防ぐ。probe-rsは数か月releaseが無いこともある。
+      - name: Keepalive (avoid 60-day schedule auto-disable)
+        run: |
+          age_days=$(( ( $(date +%s) - $(git log -1 --format=%ct) ) / 86400 ))
+          echo "Last commit age: ${age_days} day(s)"
+          if [ "$age_days" -ge 50 ]; then
+            git config user.name  "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit --allow-empty -m "keepalive: prevent scheduled workflow auto-disable"
+            git push
+          else
+            echo "Recent activity exists; no keepalive commit needed."
+          fi

@@ -1,0 +1,3 @@
+# Build output: archives are attached to a release, never committed.
+# 成果物はreleaseへ添付する。commitしない。
+dist/
