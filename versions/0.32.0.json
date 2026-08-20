@@ -1,0 +1,74 @@
+{
+  "comment": "probe-rs 0.32.0, mirrored by ch32-riscv-ug/mirror-probe-rs. Payloads are byte-identical to the upstream release recorded in upstreamUrl/upstreamChecksum. Archives whose files sat at the archive root are repacked under a single root directory, which is what arduino-cli requires; the rest are passed through unchanged. Rebuild and verify with update.py.",
+  "name": "probe-rs",
+  "version": "0.32.0",
+  "upstreamTag": "v0.32.0",
+  "systems": [
+    {
+      "host": "x86_64-pc-linux-gnu",
+      "url": "https://github.com/ch32-riscv-ug/mirror-probe-rs/releases/download/v0.32.0/probe-rs-tools-x86_64-unknown-linux-gnu.tar.xz",
+      "archiveFileName": "probe-rs-tools-x86_64-unknown-linux-gnu.tar.xz",
+      "checksum": "SHA-256:c2ccc46049e52a5d403ef212078cd637ecda55b662708327960558f83e851ff5",
+      "size": "22506272",
+      "upstreamUrl": "https://github.com/probe-rs/probe-rs/releases/download/v0.32.0/probe-rs-tools-x86_64-unknown-linux-gnu.tar.xz",
+      "upstreamArchiveFileName": "probe-rs-tools-x86_64-unknown-linux-gnu.tar.xz",
+      "upstreamChecksum": "SHA-256:c2ccc46049e52a5d403ef212078cd637ecda55b662708327960558f83e851ff5",
+      "repacked": false
+    },
+    {
+      "host": "aarch64-linux-gnu",
+      "url": "https://github.com/ch32-riscv-ug/mirror-probe-rs/releases/download/v0.32.0/probe-rs-tools-aarch64-unknown-linux-gnu.tar.xz",
+      "archiveFileName": "probe-rs-tools-aarch64-unknown-linux-gnu.tar.xz",
+      "checksum": "SHA-256:7c818cfd77808e806bf8f4d108c9137910b4fb28e0fe5c464d39782dbbc8af31",
+      "size": "21444944",
+      "upstreamUrl": "https://github.com/probe-rs/probe-rs/releases/download/v0.32.0/probe-rs-tools-aarch64-unknown-linux-gnu.tar.xz",
+      "upstreamArchiveFileName": "probe-rs-tools-aarch64-unknown-linux-gnu.tar.xz",
+      "upstreamChecksum": "SHA-256:7c818cfd77808e806bf8f4d108c9137910b4fb28e0fe5c464d39782dbbc8af31",
+      "repacked": false
+    },
+    {
+      "host": "x86_64-apple-darwin",
+      "url": "https://github.com/ch32-riscv-ug/mirror-probe-rs/releases/download/v0.32.0/probe-rs-tools-x86_64-apple-darwin.tar.xz",
+      "archiveFileName": "probe-rs-tools-x86_64-apple-darwin.tar.xz",
+      "checksum": "SHA-256:e23d117a29909a389c92234ac3ebafcc5ec24d8969d1ec5d70eece622827f778",
+      "size": "7463860",
+      "upstreamUrl": "https://github.com/probe-rs/probe-rs/releases/download/v0.32.0/probe-rs-tools-x86_64-apple-darwin.tar.xz",
+      "upstreamArchiveFileName": "probe-rs-tools-x86_64-apple-darwin.tar.xz",
+      "upstreamChecksum": "SHA-256:e23d117a29909a389c92234ac3ebafcc5ec24d8969d1ec5d70eece622827f778",
+      "repacked": false
+    },
+    {
+      "host": "arm64-apple-darwin",
+      "url": "https://github.com/ch32-riscv-ug/mirror-probe-rs/releases/download/v0.32.0/probe-rs-tools-aarch64-apple-darwin.tar.xz",
+      "archiveFileName": "probe-rs-tools-aarch64-apple-darwin.tar.xz",
+      "checksum": "SHA-256:c39631679b83d0c94dc442d05cc4ca974a87c02907a6ddbfce46746ed503152c",
+      "size": "6987164",
+      "upstreamUrl": "https://github.com/probe-rs/probe-rs/releases/download/v0.32.0/probe-rs-tools-aarch64-apple-darwin.tar.xz",
+      "upstreamArchiveFileName": "probe-rs-tools-aarch64-apple-darwin.tar.xz",
+      "upstreamChecksum": "SHA-256:c39631679b83d0c94dc442d05cc4ca974a87c02907a6ddbfce46746ed503152c",
+      "repacked": false
+    },
+    {
+      "host": "x86_64-mingw32",
+      "url": "https://github.com/ch32-riscv-ug/mirror-probe-rs/releases/download/v0.32.0/probe-rs-tools-x86_64-pc-windows-msvc-rooted.zip",
+      "archiveFileName": "probe-rs-tools-x86_64-pc-windows-msvc-rooted.zip",
+      "checksum": "SHA-256:527892291864481190fde5e03383b4cb46c4cb8cc82dbe8fed91f3307e1fe0e6",
+      "size": "11024371",
+      "upstreamUrl": "https://github.com/probe-rs/probe-rs/releases/download/v0.32.0/probe-rs-tools-x86_64-pc-windows-msvc.zip",
+      "upstreamArchiveFileName": "probe-rs-tools-x86_64-pc-windows-msvc.zip",
+      "upstreamChecksum": "SHA-256:56fc0564cc23d604b27dc2d57606194159c49f951999f3e47bd2cbffcba64103",
+      "repacked": true
+    },
+    {
+      "host": "i686-mingw32",
+      "url": "https://github.com/ch32-riscv-ug/mirror-probe-rs/releases/download/v0.32.0/probe-rs-tools-x86_64-pc-windows-msvc-rooted.zip",
+      "archiveFileName": "probe-rs-tools-x86_64-pc-windows-msvc-rooted.zip",
+      "checksum": "SHA-256:527892291864481190fde5e03383b4cb46c4cb8cc82dbe8fed91f3307e1fe0e6",
+      "size": "11024371",
+      "upstreamUrl": "https://github.com/probe-rs/probe-rs/releases/download/v0.32.0/probe-rs-tools-x86_64-pc-windows-msvc.zip",
+      "upstreamArchiveFileName": "probe-rs-tools-x86_64-pc-windows-msvc.zip",
+      "upstreamChecksum": "SHA-256:56fc0564cc23d604b27dc2d57606194159c49f951999f3e47bd2cbffcba64103",
+      "repacked": true
+    }
+  ]
+}
